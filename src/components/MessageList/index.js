@@ -5,82 +5,40 @@ import ToolbarButton from '../ToolbarButton';
 import Message from '../Message';
 import moment from 'moment';
 
+import axios from 'axios';
+
 import './MessageList.css';
 
-const MY_USER_ID = 'apple';
+const MY_USER_ID = 'user';
 
 export default function MessageList(props) {
   const [messages, setMessages] = useState([])
 
   useEffect(() => {
     getMessages();
-  },[])
-
+  },[props.convo])
+  
+  
   
   const getMessages = () => {
-     var tempMessages = [
-        {
-          id: 1,
-          author: 'apple',
-          message: 'Hello world! This is a long message that will hopefully get wrapped by our message bubble component! We will see how well it works.',
-          timestamp: new Date().getTime()
-        },
-        {
-          id: 2,
-          author: 'orange',
-          message: 'It looks like it wraps exactly as it is supposed to. Lets see what a reply looks like!',
-          timestamp: new Date().getTime()
-        },
-        {
-          id: 3,
-          author: 'orange',
-          message: 'Hello world! This is a long message that will hopefully get wrapped by our message bubble component! We will see how well it works.',
-          timestamp: new Date().getTime()
-        },
-        {
-          id: 4,
-          author: 'apple',
-          message: 'It looks like it wraps exactly as it is supposed to. Lets see what a reply looks like!',
-          timestamp: new Date().getTime()
-        },
-        {
-          id: 5,
-          author: 'apple',
-          message: 'Hello world! This is a long message that will hopefully get wrapped by our message bubble component! We will see how well it works.',
-          timestamp: new Date().getTime()
-        },
-        {
-          id: 6,
-          author: 'apple',
-          message: 'It looks like it wraps exactly as it is supposed to. Lets see what a reply looks like!',
-          timestamp: new Date().getTime()
-        },
-        {
-          id: 7,
-          author: 'orange',
-          message: 'Hello world! This is a long message that will hopefully get wrapped by our message bubble component! We will see how well it works.',
-          timestamp: new Date().getTime()
-        },
-        {
-          id: 8,
-          author: 'orange',
-          message: 'It looks like it wraps exactly as it is supposed to. Lets see what a reply looks like!',
-          timestamp: new Date().getTime()
-        },
-        {
-          id: 9,
-          author: 'apple',
-          message: 'Hello world! This is a long message that will hopefully get wrapped by our message bubble component! We will see how well it works.',
-          timestamp: new Date().getTime()
-        },
-        {
-          id: 10,
-          author: 'orange',
-          message: 'It looks like it wraps exactly as it is supposed to. Lets see what a reply looks like!',
-          timestamp: new Date().getTime()
-        },
-      ]
-      setMessages([...messages, ...tempMessages])
+    
+      axios.get('http://localhost:3000/messages')
+        .then(response => {
+          // console.log(response.data.data)
+          // debugger
+          let fetchedMessages = response.data.data.map(result => {
+            return {
+              id: result.id,
+              author: result.attributes.sender,
+              message: result.attributes.body,
+              timestamp: result.created_at,
+              voter_name: result.attributes.voter_name
+            }
+          })
+
+          let tempMessages = fetchedMessages.filter(message => message.voter_name == props.convo)
+          setMessages([...tempMessages])
+        })
   }
 
   const renderMessages = () => {

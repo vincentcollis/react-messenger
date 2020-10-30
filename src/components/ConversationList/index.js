@@ -14,12 +14,13 @@ export default function ConversationList(props) {
   },[])
 
  const getConversations = () => {
-    axios.get('https://randomuser.me/api/?results=20').then(response => {
-        let newConversations = response.data.results.map(result => {
+    axios.get('http://localhost:3000/voters')
+      .then(response => {
+        let newConversations = response.data.map(result => {
           return {
-            photo: result.picture.large,
-            name: `${result.name.first} ${result.name.last}`,
-            text: 'Hello world! This is a long message that needs to be truncated.'
+            photo: result.photo,
+            name: result.name,
+            text: result.body
           };
         });
         setConversations([...conversations, ...newConversations])
@@ -41,6 +42,7 @@ export default function ConversationList(props) {
         {
           conversations.map(conversation =>
             <ConversationListItem
+              setConvo = {props.setConvo}
               key={conversation.name}
               data={conversation}
             />
