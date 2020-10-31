@@ -8,19 +8,25 @@ import axios from 'axios';
 import './ConversationList.css';
 
 export default function ConversationList(props) {
+
   const [conversations, setConversations] = useState([]);
+  
+  
   useEffect(() => {
     getConversations()
   },[])
 
+  
+
  const getConversations = () => {
     axios.get('http://localhost:3000/voters')
       .then(response => {
-        let newConversations = response.data.map(result => {
+        let newConversations = response.data.data.map(result => {
           return {
-            photo: result.photo,
-            name: result.name,
-            text: result.body
+            voterId: result.id,
+            photo: result.attributes.photo,
+            name: result.attributes.name,
+            text: result.attributes.last_message
           };
         });
         setConversations([...conversations, ...newConversations])
@@ -31,18 +37,14 @@ export default function ConversationList(props) {
       <div className="conversation-list">
         <Toolbar
           title="Messenger"
-          leftItems={[
-            <ToolbarButton key="cog" icon="ion-ios-cog" />
-          ]}
-          rightItems={[
-            <ToolbarButton key="add" icon="ion-ios-add-circle-outline" />
-          ]}
+          leftItems={[<ToolbarButton key="cog" icon="ion-ios-cog" />]}
+          rightItems={[<ToolbarButton key="add" icon="ion-ios-add-circle-outline" />]}
         />
         <ConversationSearch />
-        {
-          conversations.map(conversation =>
+        {conversations.map(conversation =>
             <ConversationListItem
               setConvo = {props.setConvo}
+              setVoterId = {props.setVoterId}
               key={conversation.name}
               data={conversation}
             />

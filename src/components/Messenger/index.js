@@ -9,7 +9,9 @@ import ToolbarButton from "../ToolbarButton"
 export default function Messenger(props) {
   
   const [convo, setConvo] = useState('')
+  const [voterId, setVoterId] = useState("")
   
+  // console.log("Messanger: ", convo, voterId)
     return (
       <div className="messenger">
         <Toolbar
@@ -32,11 +34,11 @@ export default function Messenger(props) {
         />
 
         <div className="scrollable sidebar">
-          <ConversationList setConvo = {setConvo}/>
+          <ConversationList setConvo = {setConvo} setVoterId = {setVoterId}/>
         </div>
 
         <div className="scrollable content">
-          <MessageList convo={convo}/>
+          <MessageList convo={convo} voterId={voterId}/>
         </div>
       </div>
     );

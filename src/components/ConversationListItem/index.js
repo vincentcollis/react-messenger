@@ -8,13 +8,14 @@ export default function ConversationListItem(props) {
     shave('.conversation-snippet', 20);
   })
 
-    const { photo, name, text } = props.data;
+    const {voterId, photo, name, text } = props.data;
 
     const clickHandler = (event) =>{
-      // console.log("clickHandler convo item")
       props.setConvo(name)
+      props.setVoterId(voterId)
     }
-
+    
+    
     return (
       <div className="conversation-list-item" onClick={clickHandler}>
         <img className="conversation-photo" src={photo} alt="conversation" />

@@ -12,20 +12,20 @@ import './MessageList.css';
 const MY_USER_ID = 'user';
 
 export default function MessageList(props) {
+  
   const [messages, setMessages] = useState([])
+  const [messageTrigger, setmessageTrigger] = useState(false)
 
   useEffect(() => {
     getMessages();
-  },[props.convo])
+  },[props.convo, props.voterId, messageTrigger])
   
+  // console.log(messageTrigger)
   
   
   const getMessages = () => {
-    
       axios.get('http://localhost:3000/messages')
         .then(response => {
-          // console.log(response.data.data)
-          // debugger
           let fetchedMessages = response.data.data.map(result => {
             return {
               id: result.id,
@@ -35,8 +35,7 @@ export default function MessageList(props) {
               voter_name: result.attributes.voter_name
             }
           })
-
-          let tempMessages = fetchedMessages.filter(message => message.voter_name == props.convo)
+          let tempMessages = fetchedMessages.filter(message => message.voter_name === props.convo)
           setMessages([...tempMessages])
         })
   }
@@ -99,6 +98,7 @@ export default function MessageList(props) {
 
     return tempMessages;
   }
+  
 
     return(
       <div className="message-list">
@@ -113,14 +113,20 @@ export default function MessageList(props) {
 
         <div className="message-list-container">{renderMessages()}</div>
 
-        <Compose rightItems={[
-          <ToolbarButton key="photo" icon="ion-ios-camera" />,
-          <ToolbarButton key="image" icon="ion-ios-image" />,
-          <ToolbarButton key="audio" icon="ion-ios-mic" />,
-          <ToolbarButton key="money" icon="ion-ios-card" />,
-          <ToolbarButton key="games" icon="ion-logo-game-controller-b" />,
-          <ToolbarButton key="emoji" icon="ion-ios-happy" />
-        ]}/>
+        <Compose 
+          convo = {props.convo}
+          voterId = {props.voterId}
+          setmessageTrigger = {setmessageTrigger}
+          messageTrigger = {messageTrigger}
+          rightItems={[
+            <ToolbarButton key="photo" icon="ion-ios-camera" />,
+            <ToolbarButton key="image" icon="ion-ios-image" />,
+            <ToolbarButton key="audio" icon="ion-ios-mic" />,
+            <ToolbarButton key="money" icon="ion-ios-card" />,
+            <ToolbarButton key="games" icon="ion-logo-game-controller-b" />,
+            <ToolbarButton key="emoji" icon="ion-ios-happy" />
+          ]}
+        />
       </div>
     );
 }
