@@ -11,11 +11,16 @@ import './MessageList.css';
 
 const MY_USER_ID = 'user';
 
+export function listenForMessages(props){
+  console.log(props)
+}
+
 export default function MessageList(props) {
   
   const [messages, setMessages] = useState([])
   const [messageTrigger, setmessageTrigger] = useState(false)
 
+  
   useEffect(() => {
     getMessages();
   },[props.convo, props.voterId, messageTrigger])
